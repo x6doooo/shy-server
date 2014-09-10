@@ -24,8 +24,6 @@ exports.create = function(clusterID, envARG) {
     cluseterID = clusterID || 0;
     envARG = envARG || 0;
 
-
-    // 配置
     var app = express();
     
     // 上传文件解析
@@ -33,7 +31,7 @@ exports.create = function(clusterID, envARG) {
     app.use(bodyParser());
 
     // cookie
-    var cookieSecretString = fs.readFileSync('./config/cookie-secret', 'utf8');
+    var cookieSecretString = fs.readFileSync(__dirname + '/config/cookie-secret', 'utf8');
     cookieSecretString = cookieSecretString.replace('\n', '');
     app.use(cookieParser(cookieSecretString));
 
@@ -51,14 +49,13 @@ exports.create = function(clusterID, envARG) {
     if (envARG == '--dev') {
         app.set('env', 'development');
 
-        // 静态资源: 由node处理
         baseConf = baseConfContent['development'];
         
+        // 静态资源: 由node处理
         app.use('/statics', express.static(__dirname + '/statics'));
     } else {
         app.set('env', 'production');
 
-        // 静态资源: 由nginx配置处理
         baseConf = baseConfContent['production'];
     }
     app.set('baseConf', baseConf);
@@ -81,10 +78,9 @@ exports.create = function(clusterID, envARG) {
     */
     app.all('*', passAuth);
 
+    // 路由
     routers(app);
 
-
-    
     return app;
 };
 
