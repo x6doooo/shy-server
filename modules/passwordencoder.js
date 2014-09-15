@@ -17,21 +17,6 @@ PasswordEncoder.prototype = {
         this.config.aeskey = new Buffer(this.config.aeskey, 'hex');
         this.config.aesiv = new Buffer(this.config.aesiv, 'hex');
     },
-    // 根据token生成随机字符片段
-    // num: 字符片段长度
-    /*
-    getRandomCharWithNumber: function(num) {
-        var dict = this.config.dict;
-        var dictLength = dict.length;
-        var randomChar = '';
-        var idx;
-        while(num--) {
-            idx = ~~(Math.random() * dictLength);
-            randomChar += dict.charAt(idx);
-        }
-        return randomChar;
-    },
-    */
     // 生成随机密码
     getRandomPassword: function() {
         // 密码可用字符
@@ -61,40 +46,6 @@ PasswordEncoder.prototype = {
         dec += decipher.final('utf8');
         return dec;
     },
-    /*
-    // 按照token插入随机字符
-    encode: function(password) {
-        var token = this.config.token.split(',');
-        password = password.trim();
-
-        var startPosition;
-        var endPosition;
-        var randomChar;
-
-        for (var i = 0, len = token.length; i < len;) {
-            startPosition = token[i++];
-            endPosition = token[i++];
-            password = password.split('');
-            randomChar = this.getRandomCharWithNumber(endPosition - startPosition + 1);
-            password.splice(startPosition, 0, randomChar);
-            password = password.join('');
-        }
-        return password;
-    },
-    // 按照token删除随机字符
-    decode: function(password) {
-        var startPosition;
-        var endPosition;
-        var token = this.config.token.split(',');
-        password = password.split('');
-        for (var i = token.length - 1; i >= 0; ) {
-            endPosition = token[i--];
-            startPosition = token[i--];
-            password.splice(startPosition, endPosition - startPosition + 1);
-        }
-        return password.join('');
-    },
-    */
     // 加盐 -> MD5
     // 密码入库
     // 登录校验
