@@ -9,7 +9,7 @@ var cookieParser = require('cookie-parser');
 var log = require('./modules/log.js');
 
 // routers
-var routers = require('./modules/get-routers.js');
+var getRouters = require('./modules/get-routers.js');
 
 var passAuth = require('./modules/pass-auth.js');
 
@@ -25,6 +25,9 @@ exports.create = function(clusterID, envARG) {
     envARG = envARG || 0;
 
     var app = express();
+
+    // 模块通过process找到自己所属的app
+    process.expressApplicationInstance = app;
     
     // 上传文件解析
     app.use(busboy());
@@ -51,7 +54,7 @@ exports.create = function(clusterID, envARG) {
 
         baseConf = baseConfContent['development'];
         
-        // 静态资源: 由node处理
+        // 静态资源由node处理
         app.use('/statics', express.static(__dirname + '/statics'));
     } else {
         app.set('env', 'production');
@@ -78,8 +81,8 @@ exports.create = function(clusterID, envARG) {
     */
     app.all('*', passAuth);
 
-    // 路由
-    routers(app);
+    // 路由(modules/get-routers)
+    getRouters(app);
 
     return app;
 };
