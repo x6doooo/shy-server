@@ -30,7 +30,7 @@ module.exports = function(app) {
         method = tem.method || 'get';
         cb = (function(key) {
             return function(req, res, next) {
-                require('../routers/' + key + '.js')(req, res, next, app);
+                require('../routers/' + key + '.js')(req, res, next);
             };
         })(key);
         app[method](path, cb);
